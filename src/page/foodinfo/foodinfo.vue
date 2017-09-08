@@ -50,7 +50,7 @@ export default {
                 name: null,
                 brief: null,
                 price: null,
-                num: null,
+                num: 0,
                 peisongfei:null,
                 limit:null
             }
@@ -87,7 +87,7 @@ export default {
         },
         //购物车总数
         cartTotalNum:function(){
-            return this.foodTotalNum + this.foodinfo.num;
+            return  this.foodinfo.num;
         }
     },
     components: {
