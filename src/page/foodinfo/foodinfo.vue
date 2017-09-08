@@ -57,22 +57,28 @@ export default {
         }
     },
     methods: {
-        // 得到路由中的参数
-        getUrlParams: function() {
-            this.foodinfo.img = this.$route.query.food.img;
-            this.foodinfo.time = this.$route.query.food.time;
-            this.foodinfo.brief = this.$route.query.food.brief;
-            this.foodinfo.name = this.$route.query.food.name;
-            this.foodinfo.price = this.$route.query.food.price;
-            this.foodinfo.num = this.$route.query.food.num;
-            this.foodinfo.peisongfei = this.$route.query.food.peisongfei;
-            this.foodinfo.limit = this.$route.query.food.limit;
-            this.foodTotalNum = this.$route.query.cartnum;
-            this.foodTotalPrice = this.$route.query.cartTotalPrice;
+        // 得到localStorage的值
+        getLocalStorageParams: function() {
+            let foodObj = JSON.parse(window.localStorage.getItem("food"));
+            let cartTotalPrice = parseFloat(window.localStorage.getItem("cartTotalPrice")) ;
+            let cartnum = parseInt(window.localStorage.getItem("cartnum"));
+           
+            this.foodinfo.img = foodObj.img;
+            this.foodinfo.time = foodObj.time;
+            this.foodinfo.brief = foodObj.brief;
+            this.foodinfo.name = foodObj.name;
+            this.foodinfo.price = foodObj.price;
+            this.foodinfo.num = foodObj.num;
+            this.foodinfo.peisongfei = foodObj.peisongfei;
+            this.foodinfo.limit = foodObj.limit;
+            this.foodTotalNum = cartnum;
+            this.foodTotalPrice = cartTotalPrice;
+
+
         }
     },
     mounted(){
-         this.getUrlParams(); 
+         this.getLocalStorageParams(); 
     },
     computed:{
         // 计算单品总价

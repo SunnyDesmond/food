@@ -2,7 +2,7 @@
     <div>
         <div class="foodList">
 
-            <router-link tag="div" class="box" v-for="food in foods" to="./foodinfo" :key="food.id">
+            <div  class="box" v-for="food in foods" @click="jump(food)" :key="food.id">
                 <div class="img">
                     <img :src="food.img" alt="">
                 </div>
@@ -15,7 +15,7 @@
                         <counter :food="food"></counter>
                     </div>
                 </div>
-            </router-link>
+            </div>
 
         </div>
         <div class="cart">
@@ -34,6 +34,7 @@ export default {
         return {
             cartnum: null,
             cartTotalPrice: null,
+            foodsListLen: null,  //foods list 的长度
             foods: null
         }
     },
@@ -44,22 +45,23 @@ export default {
             axios.get("../../static/json/foods.json")
                 .then(res => {
                     that.foods = JSON.parse(res.request.response);
+                    that.foodsListLen = that.foods.length;
                 })
                 .catch(function(err) {
                     console.log(err)
                 })
         },
-        //页面跳转传值
-        routerJump: function(food) {
-            this.$router.push({ path: "./foodinfo", query: { food, cartnum: this.cartnum, cartTotalPrice: this.countCartTotalPrice } });
+        jump:function(food){
+            //本地localstorge 塞值 再进行跳转
+            window.localStorage.setItem("food", JSON.stringify(food));
+           this.$router.push({path:"./foodinfo"});
         },
 
     },
     computed: {
         countCartNum: function() {
-          
             let cartNum = 0;
-            for (let i = 0; i < this.foods.length; i++) {
+            for (let i = 0; i < this.foodsListLen; i++) {
                 cartNum += this.foods[i].num;
             }
 
@@ -67,19 +69,26 @@ export default {
         },
         countCartTotalPrice: function() {
             let cartPrice = 0;
-            for (let x = 0; x < this.foods.length; x++) {
+            for (let x = 0; x < this.foodsListLen; x++) {
                 let singlePrice = this.foods[x].price * this.foods[x].num;
                 cartPrice += singlePrice;
             }
             return this.cartTotalPrice = parseFloat(cartPrice).toFixed(2);  //解决js 浮点数计算bug
-        },
+        }
     },
     mounted() {
-        this.getFoodList();
+        this.getFoodList(); //拉取food list数据 
 
     },
+    watch: {
+        //监控页面购物车总数变化 页面数据传递给本地存储
+        "cartnum": function() {
+            window.localStorage.setItem("cartnum", this.cartnum);
+            window.localStorage.setItem("cartTotalPrice", this.countCartTotalPrice);
+        },
+    },
     components: {
-        counter
+        counter,
     }
 }
 
