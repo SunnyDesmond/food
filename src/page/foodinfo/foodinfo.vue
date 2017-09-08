@@ -12,9 +12,24 @@
             <h1 class="name">{{foodinfo.name}}</h1>
             <p class="brief">{{foodinfo.brief}}</p>
             <div class="info">
-                <span class="price">{{foodinfo.price}}</span>
-                <counter :food="foodinfo"></counter>
+                <span class="price">￥{{foodinfo.price}}</span>
+                <div class="btn">
+                    <strong class="tips">限量{{foodinfo.limit}}份</strong>
+                    <counter :food="foodinfo"></counter>
+                </div>
             </div>
+        </div>
+        <div class="slide-more">
+            <em class="arr-up"></em>
+            <span class="tips">上拉查看图文详情</span>
+        </div>
+        <div class="submit-wrap">
+            <span class="icon-cart"><em>{{cartTotalNum}}</em></span>
+            <div class="price-detail">
+                <span class="price">￥{{singlePriceCount}}</span>
+                <span class="tips">另需配送费{{foodinfo.peisongfei}}元</span>
+            </div>
+            <button class="submit-btn">提交订单</button>
         </div>
     </div>
 </template>
@@ -26,13 +41,18 @@ export default {
     data() {
         return {
             tips: "距离预定结束还有",
-            foodinfo:{
+            foodTotalNum:null,
+            foodTotalPrice:null,
+            singlePrice:null,
+            foodinfo: {
                 img: null,
                 time: null,
                 name: null,
                 brief: null,
                 price: null,
                 num: null,
+                peisongfei:null,
+                limit:null
             }
         }
     },
@@ -44,12 +64,25 @@ export default {
             this.foodinfo.brief = this.$route.query.food.brief;
             this.foodinfo.name = this.$route.query.food.name;
             this.foodinfo.price = this.$route.query.food.price;
-            this.foodinfo.num = this.$route.query.food.num;   
+            this.foodinfo.num = this.$route.query.food.num;
+            this.foodinfo.peisongfei = this.$route.query.food.peisongfei;
+            this.foodinfo.limit = this.$route.query.food.limit;
+            this.foodTotalNum = this.$route.query.cartnum;
+            this.foodTotalPrice = this.$route.query.cartTotalPrice;
         }
     },
-    mounted() {
-        this.getUrlParams();
-        
+    mounted(){
+         this.getUrlParams(); 
+    },
+    computed:{
+        // 计算单品总价
+        singlePriceCount:function(){
+            return parseFloat(this.foodinfo.price* this.foodinfo.num).toFixed(2);
+        },
+        //购物车总数
+        cartTotalNum:function(){
+            return this.foodTotalNum + this.foodinfo.num;
+        }
     },
     components: {
         counter,
@@ -59,6 +92,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../style/mixin.scss';
+.foodinfo {
+    background-color: #f5f5f5;
+}
+
 .banner {
     height: r(800);
     position: relative;
@@ -87,22 +124,119 @@ export default {
 
 .food-detail {
     padding: 0 r(45);
+    background-color: #fff;
+    padding-bottom: r(20);
     .name {
         font-size: r(48);
         color: #6C6C6C;
         font-weight: 600;
+        line-height: 1.8;
     }
     .brief {
         font-size: r(42);
         color: #989898;
-        line-height: 1.4;
+        line-height: 1.6;
     }
     .info {
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         .price {
-            color: #ff4400;
+            color: #E31738;
             font-size: r(60);
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            .tips {
+                border: 1px solid #129EFF;
+                border-radius: r(15);
+                font-size: r(42);
+                font-weight: normal;
+                color: #129EFF;
+                margin-right: r(20);
+                padding: r(6);
+            }
+        }
+    }
+}
+
+.slide-more {
+    margin-top: r(40);
+    background-color: #fff;
+    height: r(130);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .arr-up {
+        @include bis('../../assets/img/arrow_up.png');
+        width: r(60);
+        height: r(60);
+    }
+    .tips {
+        font-size: r(46);
+        color: #9B9B9B;
+    }
+}
+
+.submit-wrap {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    border-top: 1px solid #DCDCDC;
+    background-color: #fff;
+    width: 100%;
+    height: r(150);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .icon-cart {
+        @include bis('../../assets/img/cart.png');
+        width: r(80);
+        height: r(80);
+        position: relative;
+        margin-left: r(45);
+        em{
+            position: absolute;
+            width: r(45);
+            height: r(45);
+            border-radius: 50%;
+            background-color: #E31436;
+            color: #fff;
+            font-size: r(36);
+            font-style: normal;
+            right: r(-15);
+            top: r(-15);
+            line-height: r(45);
+            text-align: center;
+        }
+    }
+    .price-detail{
+        display: flex;
+         flex-direction:column;
+         margin-right: r(80);
+        .price{
+            font-size: r(44);
+            color: #E31436;
+            flex: 1;
+        }
+        .tips{
+            flex: 1;
+            font-size: r(36);
+            columns: #666666;
+        }
+    }
+    .submit-btn{
+        width: r(450);
+        height: 100%;
+        appearance: none;
+        border:0;
+        align-self: flex-end;
+        background-color: #089BFF;
+        font-size: r(44);
+        color: #fff;
+        &:active{
+            opacity: .8;
         }
     }
 }

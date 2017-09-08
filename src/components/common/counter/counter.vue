@@ -9,7 +9,7 @@
 
 <script>
 export default {
-    props:["food"],
+    props: ["food"],
     data() {
         return {
 
@@ -17,7 +17,12 @@ export default {
     },
     methods: {
         plus: function(food) {
-            food.num++;
+           
+            if (food.num < food.limit) {
+                food.num++;
+            }else{
+                return false;                
+            }
             food.minusFlag = false;
         },
         minus: function(food) {
@@ -38,12 +43,16 @@ export default {
 .counter {
     display: flex;
     justify-content: flex-end;
+    align-content: center;
     span {
         width: r(60);
         height: r(60);
-        display: block;
-        text-align: center;
-        line-height: r(60);
+        font-size: r(42);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        color: #B1B1B1;
         &.minusHide {
             display: none;
         }
@@ -55,6 +64,7 @@ export default {
             border-radius: 50%;
             background-color: #0097FF;
             color: #fff;
+            border: 1px solid #0097FF;
         }
     }
 }
