@@ -1,5 +1,6 @@
 <template>
-    <div class="foodinfo">
+
+  <div class="foodinfo">
         <div class="banner">
             <div class="img">
                 <img :src="foodinfo.img" alt="">
@@ -32,6 +33,8 @@
             <button class="submit-btn">提交订单</button>
         </div>
     </div>
+  
+  
 </template>
 
 <script>
@@ -93,7 +96,7 @@ export default {
         }
     },
     components: {
-        counter,
+        counter
     }
 }
 </script>
@@ -102,6 +105,7 @@ export default {
 @import '../../style/mixin.scss';
 .foodinfo {
     background-color: #f5f5f5;
+    padding-top: r(150);
 }
 
 .banner {

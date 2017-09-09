@@ -1,6 +1,6 @@
 <template>
     <div class="tabFoot">
-        <div class="item" v-for="tab in tabs">
+        <div class="item" v-for="tab in tabs" :key="tab.id">
             <span class="icon iconfont" :class="tab.icon"></span>
             <span class="label">{{tab.label}}</span>
         </div>
@@ -48,6 +48,13 @@ justify-content: space-around;
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
+        span{
+            font-size: r(36);
+            &.icon{
+                font-size: r(66);
+            }
+        }
     }
 }
 
