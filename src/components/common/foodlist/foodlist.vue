@@ -38,7 +38,7 @@ export default {
         }
     },
     methods: {
-        // 获取foodlist
+         // 获取foodlist
         getFoodList: function() {
             let that = this;
             axios.get("../../static/json/foods.json")
@@ -76,7 +76,6 @@ export default {
     },
     mounted() {
         this.getFoodList();
-
     },
     components: {
         counter
