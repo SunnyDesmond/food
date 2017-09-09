@@ -21,7 +21,7 @@ export default {
 @import '../../style/mixin.scss';
 .head {
     background-color: #0097FF;
-    position: relative;
+    position: fixed;
     width: 100%;
    
     h1 {

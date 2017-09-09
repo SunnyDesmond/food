@@ -25,5 +25,11 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+@import 'src/style/mixin.scss';
+    .home{
+        padding-top: r(150);
+    }
+</style>
 
 

@@ -50,7 +50,7 @@ export default {
                 name: null,
                 brief: null,
                 price: null,
-                num: 0,
+                num: null,
                 peisongfei:null,
                 limit:null
             }
@@ -62,13 +62,14 @@ export default {
             let foodObj = JSON.parse(window.localStorage.getItem("food"));
             let cartTotalPrice = parseFloat(window.localStorage.getItem("cartTotalPrice")) ;
             let cartnum = parseInt(window.localStorage.getItem("cartnum"));
-           
+      
             this.foodinfo.img = foodObj.img;
             this.foodinfo.time = foodObj.time;
             this.foodinfo.brief = foodObj.brief;
             this.foodinfo.name = foodObj.name;
             this.foodinfo.price = foodObj.price;
             this.foodinfo.num = foodObj.num;
+          
             this.foodinfo.peisongfei = foodObj.peisongfei;
             this.foodinfo.limit = foodObj.limit;
             this.foodTotalNum = cartnum;
@@ -85,8 +86,9 @@ export default {
         singlePriceCount:function(){
             return parseFloat(this.foodinfo.price* this.foodinfo.num).toFixed(2);
         },
-        //购物车总数
+        //  单品购物车数量
         cartTotalNum:function(){
+          
             return  this.foodinfo.num;
         }
     },
@@ -103,7 +105,6 @@ export default {
 }
 
 .banner {
-    height: r(800);
     position: relative;
     overflow: hidden;
     .img {
@@ -209,7 +210,7 @@ export default {
             border-radius: 50%;
             background-color: #E31436;
             color: #fff;
-            font-size: r(36);
+            font-size: r(32);
             font-style: normal;
             right: r(-15);
             top: r(-15);

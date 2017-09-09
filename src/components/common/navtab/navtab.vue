@@ -27,6 +27,8 @@ export default {
     justify-content: space-around;
     background-color: #0097FF;
     height: r(150);
+    position: fixed;
+    width: 100%;
     .tab {
         font-size: r(46);
         color: #fff;

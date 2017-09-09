@@ -95,12 +95,19 @@ export default {
 
 <style lang="scss" scoped>
 @import 'src/style/mixin.scss';
+.foodList{
+    padding-top: r(150);
+    padding-bottom: r(150);
+}
 .box {
     padding: r(20);
     display: flex;
     justify-content: space-around;
     align-items: center;
-
+    border-bottom: 1px solid #F1F1F1;
+    &:last-child{
+         border:0;
+    }
     .img {
         width: r(250);
         height: r(250);
