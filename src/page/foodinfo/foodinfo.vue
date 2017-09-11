@@ -65,16 +65,16 @@ export default {
             let foodObj = JSON.parse(window.localStorage.getItem("food"));
             let cartTotalPrice = parseFloat(window.localStorage.getItem("cartTotalPrice")) ;
             let cartnum = parseInt(window.localStorage.getItem("cartnum"));
-      
-            this.foodinfo.img = foodObj.img;
-            this.foodinfo.time = foodObj.time;
-            this.foodinfo.brief = foodObj.brief;
-            this.foodinfo.name = foodObj.name;
-            this.foodinfo.price = foodObj.price;
-            this.foodinfo.num = foodObj.num;
-          
-            this.foodinfo.peisongfei = foodObj.peisongfei;
-            this.foodinfo.limit = foodObj.limit;
+            const {img,time,brief,name,price,num,peisongfei,limit} = foodObj;
+            this.foodinfo.img = img;
+            this.foodinfo.time = time;
+            this.foodinfo.brief = brief;
+            this.foodinfo.name = name;
+            this.foodinfo.price = price;
+            this.foodinfo.num = num;
+            this.foodinfo.peisongfei = peisongfei;
+            this.foodinfo.limit = limit;
+
             this.foodTotalNum = cartnum;
             this.foodTotalPrice = cartTotalPrice;
 

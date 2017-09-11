@@ -1,7 +1,6 @@
 <template>
     <div>
-        <div class="foodList">
-
+        <div class="foodList" :tabIndex="tabIndex">
             <div class="box" v-for="food in foods" @click="jump(food)" :key="food.id">
                 <div class="img">
                     <img :src="food.img" alt="">
@@ -26,11 +25,12 @@
 
 <script>
 import counter from '../../common/counter/counter';
+import mockdata from "@/plugins/mock";
 import axios from 'axios';
-import Mock from 'mockjs';
+
 export default {
     name: "foodList",
-    props: ["food"],
+    props: ["tabIndex","food"],
     data() {
         return {
             cartnum: null,
@@ -43,30 +43,14 @@ export default {
         // 获取foodlist
         getFoodList: function() {
             let that = this;
-            const mockdata = Mock.mock({
-                // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
-                'foods|10-50': [{
-                    // 属性 id 是一个自增数，起始值为 1，每次增 1
-                    'name': "@ctitle(2,10)",
-                    "img": "@image('600x600',#b7ef7c)",
-                    "brief": "@csentence(1,50)",
-                    "price|0-100.0-2": 1,
-                    "num": 0,
-                    "minusFlag": true,
-                    "time": "@time",
-                    "peisongfei|0-100.0-2": 1,
-                    "limit|0-100": 1
-                }]
-            });
-
-            //    mock 数据
-
             new Promise((resolve, reject) => {
-               that.foods =mockdata.foods;
+               that.foods =mockdata.data.foods;
                that.foodsListLen = that.foods.length;
+            }).catch(err=>{
+                console.log(err)
             })
 
-
+            // 实际请求数据
             // axios.get("../../static/json/foods.json")
             //     .then(res => {
             //         that.foods = JSON.parse(res.request.response);
@@ -75,6 +59,7 @@ export default {
             //     .catch(err => {
             //         console.log(err)
             //     })
+
         },
         jump: function(food) {
             //本地localstorge 塞值 再进行跳转

@@ -1,22 +1,34 @@
 <template>
-    <div class="navTab">
-        <div class="tab" :class="[{cur:item.iscur,}]" v-for="(item, index) in tabItems" :key="item.id">{{item.title}}</div>
+    <div>
+        <div class="navTab">
+            <div class="tab" :class="[{cur:item.iscur,}]" v-for="(item, index) in tabItems" :key="item.id" @click="tabJump(index)">{{item.title}}</div>
+        </div>
     </div>
 </template>
 
 <script>
+
 export default {
+  
     data() {
         return {
             tabItems: [
-                { title: "快食简餐",iscur:true},
-                { title: "精致小点",iscur:false},
-                { title: "特色卤味",iscur:false},
-                { title: "新鲜净菜",iscur:false}
+                { title: "快食简餐", iscur: true },
+                { title: "精致小点", iscur: false },
+                { title: "特色卤味", iscur: false },
+                { title: "新鲜净菜", iscur: false }
             ]
         }
     },
-  
+    methods: {
+        // tab跳转
+        tabJump: function(index) {
+            this.$router.push({ path: "/tab"+index });
+            this.tabItems[index].iscur = true;
+        },
+    },
+    
+
 }
 </script>
 
