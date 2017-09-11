@@ -27,7 +27,7 @@ export default {
         },
         minus: function(food) {
             let foodNumCheck = food.num--;
-            if (foodNumCheck <= 0) {
+            if (foodNumCheck <=1) {
                 food.num = 0;
                 food.minusFlag = true;
             }

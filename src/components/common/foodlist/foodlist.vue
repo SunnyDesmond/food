@@ -2,7 +2,7 @@
     <div>
         <div class="foodList">
 
-            <div  class="box" v-for="food in foods" @click="jump(food)" :key="food.id">
+            <div class="box" v-for="food in foods" @click="jump(food)" :key="food.id">
                 <div class="img">
                     <img :src="food.img" alt="">
                 </div>
@@ -27,6 +27,7 @@
 <script>
 import counter from '../../common/counter/counter';
 import axios from 'axios';
+import Mock from 'mockjs';
 export default {
     name: "foodList",
     props: ["food"],
@@ -39,22 +40,46 @@ export default {
         }
     },
     methods: {
-         // 获取foodlist
+        // 获取foodlist
         getFoodList: function() {
             let that = this;
-            axios.get("../../static/json/foods.json")
-                .then(res => {
-                    that.foods = JSON.parse(res.request.response);
-                    that.foodsListLen = that.foods.length;
-                })
-                .catch(function(err) {
-                    console.log(err)
-                })
+            const mockdata = Mock.mock({
+                // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
+                'foods|10-50': [{
+                    // 属性 id 是一个自增数，起始值为 1，每次增 1
+                    'name': "@ctitle(2,10)",
+                    "img": "@image('600x600',#b7ef7c)",
+                    "brief": "@csentence(1,50)",
+                    "price|0-100.0-2": 1,
+                    "num": 0,
+                    "minusFlag": true,
+                    "time": "@time",
+                    "peisongfei|0-100.0-2": 1,
+                    "limit|0-100": 1
+                }]
+            });
+
+            //    mock 数据
+
+            new Promise((resolve, reject) => {
+               that.foods =mockdata.foods;
+               that.foodsListLen = that.foods.length;
+            })
+
+
+            // axios.get("../../static/json/foods.json")
+            //     .then(res => {
+            //         that.foods = JSON.parse(res.request.response);
+            //         that.foodsListLen = that.foods.length;
+            //     })
+            //     .catch(err => {
+            //         console.log(err)
+            //     })
         },
-        jump:function(food){
+        jump: function(food) {
             //本地localstorge 塞值 再进行跳转
             window.localStorage.setItem("food", JSON.stringify(food));
-           this.$router.push({path:"./foodinfo"});
+            this.$router.push({ path: "./foodinfo" });
         },
 
     },
@@ -95,18 +120,19 @@ export default {
 
 <style lang="scss" scoped>
 @import 'src/style/mixin.scss';
-.foodList{
+.foodList {
     padding-top: r(150);
     padding-bottom: r(150);
 }
+
 .box {
     padding: r(20);
     display: flex;
     justify-content: space-around;
     align-items: center;
     border-bottom: 1px solid #F1F1F1;
-    &:last-child{
-         border:0;
+    &:last-child {
+        border: 0;
     }
     .img {
         width: r(250);
