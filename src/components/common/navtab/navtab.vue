@@ -14,7 +14,7 @@ export default {
     data() {
         return {
             tabItems: [
-                { title: "快食简餐", iscur: true },
+                { title: "快食简餐", iscur: false },
                 { title: "精致小点", iscur: false },
                 { title: "特色卤味", iscur: false },
                 { title: "新鲜净菜", iscur: false }
@@ -38,11 +38,17 @@ export default {
     },
     mounted() {
         //处理选项卡下划线
+
         const tabVal = window.sessionStorage.getItem("tabType");
-        for (let i = 0; i < this.tabItems.length; i++) {
-            this.tabItems[i].iscur = false;
-            this.tabItems[tabVal].iscur = true;
+        if (tabVal != undefined) {
+            for (let i = 0; i < this.tabItems.length; i++) {
+                this.tabItems[i].iscur = false;
+                this.tabItems[tabVal].iscur = true;
+            }
+        } else {
+            this.tabItems[0].iscur = true;
         }
+
     }
 
 }

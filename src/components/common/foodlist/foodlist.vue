@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="foodList" :tabType="tabType">
-            <div class="box" v-for="food in foods"  :key="food.id">
+            <div class="box" v-for="food in foods" :key="food.id">
                 <div class="img" @click="jump(food)">
                     <img :src="food.img" alt="">
                 </div>
@@ -35,40 +35,23 @@ export default {
         return {
             cartnum: null,
             cartTotalPrice: null,
-            foodsListLen: null,  //foods list 的长度
+            foodsListLen: null,  //foods 某一分类的 list 的长度
             foods: null,
+            foodsLen:null //foods 的分类数量
         }
     },
     methods: {
         // 获取foodlist
         getFoodList: function() {
             let that = this;
+            // 从sessionStorage获取tab值
+            const tabVal = window.sessionStorage.getItem("tabType");
 
-            new Promise((resolve, reject) => {
-                // 从sessionStorage获取tab值
-                const tabVal = window.sessionStorage.getItem("tabType");
-                    // 设置默认数据， 这样写真的好吗？
-                    that.foods = mockdata.data.foods1;
-                    that.foodsListLen = that.foods.length;
-
-                if (tabVal == 0) {
-                    that.foods = mockdata.data.foods1;
-                    that.foodsListLen = that.foods.length;
-                    
-                }
-                 if (tabVal == 1) {
-                    that.foods = mockdata.data.foods2;
-                    that.foodsListLen = that.foods.length;
-                }
-                 if (tabVal == 2) {
-                    that.foods = mockdata.data.foods3;
-                    that.foodsListLen = that.foods.length;
-                }
-                 if (tabVal ==3) {
-                    that.foods = mockdata.data.foods4;
-                    that.foodsListLen = that.foods.length;
-                }
-             
+            //  mock 数据   
+            new Promise(() => {
+                that.foods = mockdata.data.foodsList[`foods${tabVal}`];
+                that.foodsLen = Object.keys(mockdata.data.foodsList).length;
+                that.foodsListLen = that.foods.length;
             }).catch(err => {
                 console.log(err)
             })
@@ -89,15 +72,28 @@ export default {
             window.localStorage.setItem("food", JSON.stringify(food));
             this.$router.push({ path: "./foodinfo" });
         },
-
+        //本地存储
+        setDataInLocalStorage: function() {
+             const tabVal = window.sessionStorage.getItem("tabType");
+             let cartNumList = {};
+             for(let i=0;i<this.foodsLen;i++){
+                 cartNumList[i] = this.cartnum;
+             }
+             console.log(cartNumList)
+            //  cartNumList.cartNumList = this.cartnum;
+            window.localStorage.setItem(`cartNumList`, JSON.stringify(cartNumList));
+            window.localStorage.setItem(`cartTotalPrice${tabVal}`, this.countCartTotalPrice);
+        },
     },
     computed: {
-        countCartNum: function() {
-            let cartNum = 0;
+        countCartNum() {
+          
+            // 获取本地存储的购物车中的值
+              let cartNum = 0; 
+
             for (let i = 0; i < this.foodsListLen; i++) {
                 cartNum += this.foods[i].num;
             }
-
             return this.cartnum = cartNum;
         },
         countCartTotalPrice: function() {
@@ -114,11 +110,13 @@ export default {
     },
     watch: {
         //监控页面购物车总数变化 页面数据传递给本地存储
-        "cartnum": function() {
-            window.localStorage.setItem("cartnum", this.cartnum);
-            window.localStorage.setItem("cartTotalPrice", this.countCartTotalPrice);
-        },
-        "$route":"getFoodList"  //监听路由事件
+        "cartnum": "setDataInLocalStorage",
+        $route() {
+            this.getFoodList();  //监听路由变化，根据路由请求type获取数据
+            const num = window.localStorage.getItem("cartnum");
+            const newNum = parseInt(num) + this.cartnum;
+            window.localStorage.setItem("cartnum",newNum)
+        }
     },
     components: {
         counter,
