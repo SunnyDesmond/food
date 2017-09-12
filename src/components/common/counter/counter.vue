@@ -45,8 +45,8 @@ export default {
     justify-content: flex-end;
     align-content: center;
     span {
-        width: r(60);
-        height: r(60);
+        width: r(70);
+        height: r(70);
         font-size: r(42);
         display: flex;
         justify-content: center;

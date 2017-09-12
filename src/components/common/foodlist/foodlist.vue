@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class="foodList" :tabIndex="tabIndex">
-            <div class="box" v-for="food in foods" @click="jump(food)" :key="food.id">
-                <div class="img">
+        <div class="foodList" :tabType="tabType">
+            <div class="box" v-for="food in foods"  :key="food.id">
+                <div class="img" @click="jump(food)">
                     <img :src="food.img" alt="">
                 </div>
                 <div class="info">
-                    <h3 class="name">{{food.name}}</h3>
-                    <p class="biref">{{food.brief}}</p>
+                    <h3 class="name" @click="jump(food)">{{food.name}}</h3>
+                    <p class="biref" @click="jump(food)">{{food.brief}}</p>
                     <div class="zone">
                         <span class="price">￥{{food.price}}</span>
                         <!-- 计数器组件 -->
@@ -30,23 +30,46 @@ import axios from 'axios';
 
 export default {
     name: "foodList",
-    props: ["tabIndex","food"],
+    props: ["tabType", "food"],
     data() {
         return {
             cartnum: null,
             cartTotalPrice: null,
             foodsListLen: null,  //foods list 的长度
-            foods: null
+            foods: null,
         }
     },
     methods: {
         // 获取foodlist
         getFoodList: function() {
             let that = this;
+
             new Promise((resolve, reject) => {
-               that.foods =mockdata.data.foods;
-               that.foodsListLen = that.foods.length;
-            }).catch(err=>{
+                // 从sessionStorage获取tab值
+                const tabVal = window.sessionStorage.getItem("tabType");
+                    // 设置默认数据， 这样写真的好吗？
+                    that.foods = mockdata.data.foods1;
+                    that.foodsListLen = that.foods.length;
+
+                if (tabVal == 0) {
+                    that.foods = mockdata.data.foods1;
+                    that.foodsListLen = that.foods.length;
+                    
+                }
+                 if (tabVal == 1) {
+                    that.foods = mockdata.data.foods2;
+                    that.foodsListLen = that.foods.length;
+                }
+                 if (tabVal == 2) {
+                    that.foods = mockdata.data.foods3;
+                    that.foodsListLen = that.foods.length;
+                }
+                 if (tabVal ==3) {
+                    that.foods = mockdata.data.foods4;
+                    that.foodsListLen = that.foods.length;
+                }
+             
+            }).catch(err => {
                 console.log(err)
             })
 
@@ -87,7 +110,7 @@ export default {
         }
     },
     mounted() {
-        this.getFoodList(); //拉取food list数据 
+        this.getFoodList();
     },
     watch: {
         //监控页面购物车总数变化 页面数据传递给本地存储
@@ -95,6 +118,7 @@ export default {
             window.localStorage.setItem("cartnum", this.cartnum);
             window.localStorage.setItem("cartTotalPrice", this.countCartTotalPrice);
         },
+        "$route":"getFoodList"  //监听路由事件
     },
     components: {
         counter,

@@ -3,13 +3,14 @@
         <div class="navTab">
             <div class="tab" :class="[{cur:item.iscur,}]" v-for="(item, index) in tabItems" :key="item.id" @click="tabJump(index)">{{item.title}}</div>
         </div>
+        <food-list :tabType="tabType"></food-list>
     </div>
 </template>
 
 <script>
-
+import foodList from '@/components/common/foodlist/foodlist'
 export default {
-  
+    props: ["tabType"],
     data() {
         return {
             tabItems: [
@@ -23,11 +24,26 @@ export default {
     methods: {
         // tab跳转
         tabJump: function(index) {
-            this.$router.push({ path: "/tab"+index });
-            this.tabItems[index].iscur = true;
+            this.$router.push({ query: { tabType: index } });
+            window.sessionStorage.setItem("tabType", index);
+            //处理选项卡下划线
+            for (let i = 0; i < this.tabItems.length; i++) {
+                this.tabItems[i].iscur = false;
+                this.tabItems[index].iscur = true;
+            }
         },
     },
-    
+    components: {
+        foodList,
+    },
+    mounted() {
+        //处理选项卡下划线
+        const tabVal = window.sessionStorage.getItem("tabType");
+        for (let i = 0; i < this.tabItems.length; i++) {
+            this.tabItems[i].iscur = false;
+            this.tabItems[tabVal].iscur = true;
+        }
+    }
 
 }
 </script>
