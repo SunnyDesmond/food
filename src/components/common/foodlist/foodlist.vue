@@ -17,7 +17,8 @@
             </div>
 
         </div>
-        <div class="cart">
+
+        <div class="hovercart">
             <span>{{countCartNum}}</span>
         </div>
     </div>
@@ -33,11 +34,12 @@ export default {
     props: ["tabType", "food"],
     data() {
         return {
-            cartnum: null,
-            cartTotalPrice: null,
-            foodsListLen: null,  //foods 某一分类的 list 的长度
+            foodsAll: null,
+            foodsAllLen: null,  //所有foods的种类
             foods: null,
-            foodsLen:null //foods 的分类数量
+            foodsListLen: null,  //foods 某一分类的 list 的长度
+
+
         }
     },
     methods: {
@@ -45,13 +47,22 @@ export default {
         getFoodList: function() {
             let that = this;
             // 从sessionStorage获取tab值
-            const tabVal = window.sessionStorage.getItem("tabType");
-
+            let tabVal = window.sessionStorage.getItem("tabType");
+            if (tabVal) {
+                tabVal = window.sessionStorage.getItem("tabType");
+            } else {
+                tabVal = 0;
+            }
             //  mock 数据   
             new Promise(() => {
-                that.foods = mockdata.data.foodsList[`foods${tabVal}`];
-                that.foodsLen = Object.keys(mockdata.data.foodsList).length;
-                that.foodsListLen = that.foods.length;
+                that.foodsAll = mockdata.data.foodsList; //总数据
+
+                that.foodsAllLen = Object.keys(mockdata.data.foodsList).length; //总数据的分类
+
+                that.foods = mockdata.data.foodsList[`foods${tabVal}`];  //某一个分类的数据
+
+                that.foodsListLen = that.foods.length;  //某一个分类的数据 的长度
+
             }).catch(err => {
                 console.log(err)
             })
@@ -72,50 +83,26 @@ export default {
             window.localStorage.setItem("food", JSON.stringify(food));
             this.$router.push({ path: "./foodinfo" });
         },
-        //本地存储
-        setDataInLocalStorage: function() {
-             const tabVal = window.sessionStorage.getItem("tabType");
-             let cartNumList = {};
-             for(let i=0;i<this.foodsLen;i++){
-                 cartNumList[i] = this.cartnum;
-             }
-             console.log(cartNumList)
-            //  cartNumList.cartNumList = this.cartnum;
-            window.localStorage.setItem(`cartNumList`, JSON.stringify(cartNumList));
-            window.localStorage.setItem(`cartTotalPrice${tabVal}`, this.countCartTotalPrice);
-        },
+
     },
     computed: {
         countCartNum() {
-          
-            // 获取本地存储的购物车中的值
-              let cartNum = 0; 
-
-            for (let i = 0; i < this.foodsListLen; i++) {
-                cartNum += this.foods[i].num;
+            let allFoodListCount = 0;
+            for (let i = 0; i < this.foodsAllLen; i++) {
+                for (let z = 0; z < this.foodsAll[`foods${i}`].length; z++) {
+                    allFoodListCount += this.foodsAll[`foods${i}`][z].num;
+                }
             }
-            return this.cartnum = cartNum;
+            return allFoodListCount;
         },
-        countCartTotalPrice: function() {
-            let cartPrice = 0;
-            for (let x = 0; x < this.foodsListLen; x++) {
-                let singlePrice = this.foods[x].price * this.foods[x].num;
-                cartPrice += singlePrice;
-            }
-            return this.cartTotalPrice = parseFloat(cartPrice).toFixed(2);  //解决js 浮点数计算bug
-        }
     },
-    mounted() {
+    created() {
         this.getFoodList();
     },
     watch: {
-        //监控页面购物车总数变化 页面数据传递给本地存储
-        "cartnum": "setDataInLocalStorage",
         $route() {
             this.getFoodList();  //监听路由变化，根据路由请求type获取数据
-            const num = window.localStorage.getItem("cartnum");
-            const newNum = parseInt(num) + this.cartnum;
-            window.localStorage.setItem("cartnum",newNum)
+
         }
     },
     components: {
@@ -177,21 +164,29 @@ export default {
     }
 }
 
-.cart {
+.hovercart {
     position: fixed;
     left: r(80);
     bottom: r(200);
     width: r(120);
     height: r(120);
     border-radius: 50%;
-    background-color: #fff000;
+    background-size: contain;
     z-index: 999;
+    background: #fff url('../../../assets/img/cart.png') no-repeat center center/60%;
     span {
-        font-size: r(46);
-        color: #f10c0c;
+        font-size: r(32);
+        color: #fff;
         display: block;
-        line-height: r(120);
         text-align: center;
+        position: absolute;
+        top: r(10);
+        right: 0;
+        width: r(50);
+        height: r(50);
+        line-height: r(50);
+        border-radius: 50%;
+        background-color: #f10c0c;
     }
 }
 </style>
