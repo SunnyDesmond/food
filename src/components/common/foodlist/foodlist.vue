@@ -21,6 +21,7 @@
         <div class="hovercart">
             <span>{{countCartNum}}</span>
         </div>
+        <loading v-show="isLoad"></loading>
     </div>
 </template>
 
@@ -28,7 +29,7 @@
 import counter from '../../common/counter/counter';
 import mockdata from "@/plugins/mock";
 import axios from 'axios';
-
+import loading from '../../common/loading/loading';
 export default {
     name: "foodList",
     props: ["tabType", "food"],
@@ -38,13 +39,13 @@ export default {
             foodsAllLen: null,  //所有foods的种类
             foods: null,
             foodsListLen: null,  //foods 某一分类的 list 的长度
-
-
+            isLoad: false  //是否展示加载
         }
     },
     methods: {
         // 获取foodlist
         getFoodList: function() {
+
             let that = this;
             // 从sessionStorage获取tab值
             let tabVal = window.sessionStorage.getItem("tabType");
@@ -53,8 +54,9 @@ export default {
             } else {
                 tabVal = 0;
             }
-            //  mock 数据   
-            new Promise(() => {
+            //  mock 数据  
+            var promise = new Promise(resolve=>{
+                that.isLoad = true;
                 that.foodsAll = mockdata.data.foodsList; //总数据
 
                 that.foodsAllLen = Object.keys(mockdata.data.foodsList).length; //总数据的分类
@@ -62,10 +64,15 @@ export default {
                 that.foods = mockdata.data.foodsList[`foods${tabVal}`];  //某一个分类的数据
 
                 that.foodsListLen = that.foods.length;  //某一个分类的数据 的长度
-
-            }).catch(err => {
-                console.log(err)
+                resolve();
+            }).then(function(){
+                setTimeout(function(){
+                     that.isLoad = false;
+                },500)
+              
             })
+         
+
 
             // 实际请求数据
             // axios.get("../../static/json/foods.json")
@@ -106,7 +113,7 @@ export default {
         }
     },
     components: {
-        counter,
+        counter, loading
     }
 }
 

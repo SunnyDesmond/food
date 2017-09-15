@@ -53,6 +53,7 @@ justify-content: space-around;
             font-size: r(36);
             &.icon{
                 font-size: r(66);
+                
             }
         }
     }
