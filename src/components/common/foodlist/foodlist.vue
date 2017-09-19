@@ -15,7 +15,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="hovercart">
@@ -54,24 +53,23 @@ export default {
             } else {
                 tabVal = 0;
             }
-            //  mock 数据  
-            var promise = new Promise(resolve=>{
+
+            new Promise((resolve,reject) => {
+                var that = this;
                 that.isLoad = true;
-                that.foodsAll = mockdata.data.foodsList; //总数据
+                that.foods = null;
+                setTimeout(function() {
+                    that.foodsAll = mockdata.data.foodsList; //总数据
 
-                that.foodsAllLen = Object.keys(mockdata.data.foodsList).length; //总数据的分类
+                    that.foodsAllLen = Object.keys(mockdata.data.foodsList).length; //总数据的分类
 
-                that.foods = mockdata.data.foodsList[`foods${tabVal}`];  //某一个分类的数据
+                    that.foods = mockdata.data.foodsList[`foods${tabVal}`];  //某一个分类的数据
 
-                that.foodsListLen = that.foods.length;  //某一个分类的数据 的长度
-                resolve();
-            }).then(function(){
-                setTimeout(function(){
-                     that.isLoad = false;
-                },500)
-              
-            })
-         
+                    that.foodsListLen = that.foods.length;  //某一个分类的数据 的长度
+                    that.isLoad = false;
+                }, 500)
+            });
+
 
 
             // 实际请求数据
